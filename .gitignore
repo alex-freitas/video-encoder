@@ -2,3 +2,5 @@
 /.idea
 /bucket-credential.json
 /commands.txt
+/.pgdata
+/.devcontainer

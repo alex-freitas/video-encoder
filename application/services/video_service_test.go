@@ -4,7 +4,7 @@ import (
 	"encoder/application/repositories"
 	"encoder/application/services"
 	"encoder/domain"
-	"encoder/infrastructure/database"
+	"encoder/infra/database"
 	dotenv "github.com/joho/godotenv"
 	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"

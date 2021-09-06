@@ -3,7 +3,7 @@ package repositories_test
 import (
 	"encoder/application/repositories"
 	"encoder/domain"
-	"encoder/infrastructure/database"
+	"encoder/infra/database"
 	"github.com/jinzhu/gorm"
 	"github.com/stretchr/testify/require"
 	"testing"
