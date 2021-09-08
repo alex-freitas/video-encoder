@@ -7,6 +7,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"github.com/streadway/amqp"
 	"os"
+	"sync"
 	"time"
 )
 
@@ -15,6 +16,8 @@ type JobWorkerResult struct {
 	Message *amqp.Delivery
 	Error   error
 }
+
+var mutex = &sync.Mutex{}
 
 func JobWorker(messageChannel chan amqp.Delivery,
 	returnChannel chan JobWorkerResult,
@@ -36,15 +39,20 @@ func JobWorker(messageChannel chan amqp.Delivery,
 			returnChannel <- returnJobWorkerResult(domain.Job{}, message, err)
 			continue
 		}
-
+		mutex.Lock()
 		(*video).ID = uuid.NewV4().String()
+		mutex.Unlock()
 
 		if err = jobService.VideoService.Video.Validate(); err != nil {
 			returnChannel <- returnJobWorkerResult(domain.Job{}, message, err)
 			continue
 		}
 
-		if err = jobService.VideoService.Insert(); err != nil {
+		mutex.Lock()
+		err = jobService.VideoService.Insert()
+		mutex.Unlock()
+
+		if err != nil {
 			returnChannel <- returnJobWorkerResult(domain.Job{}, message, err)
 			continue
 		}
